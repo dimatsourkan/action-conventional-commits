@@ -19,7 +19,7 @@ See: https://conventionalcommits.org/
 <!-- start usage -->
 
 ```yaml
-- uses: taskmedia/action-conventional-commits@v1.1.5
+- uses: dimatsourkan/action-conventional-commits@v1.0.0
   with:
     # token to access GitHub API to receive PR commits
     # Default: ${{ github.token }}
@@ -38,8 +38,8 @@ See: https://conventionalcommits.org/
     types: ""
 
     # allow different scopes in commit message
-    # Default: ""
-    types: ""
+    # Default:
+    scopes: ""
 ```
 
 <!-- end usage -->
@@ -54,7 +54,7 @@ See: https://conventionalcommits.org/
 | **`skip_merge`**  | skip merge commits                               | `true`                         | **false**    |
 | **`skip_revert`** | skip revert commits                              | `true`                         | **false**    |
 | **`types`**       | allow different types in commit message          | <code>fix\|feat\|revert</code> | **false**    |
-| **`scopes`**      | allow different scopes in commit message         | <code></code>                  | **false**    |
+| **`scopes`**      | allow different scopes in commit message         |                                | **false**    |
 
 <!-- end inputs -->
 
