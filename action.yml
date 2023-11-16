@@ -21,7 +21,7 @@ inputs:
     description: "allow different types in commit message"
     required: false
   scopes:
-    default: "*"
+    default: ".*"
     description: "allow different scopes in commit message"
     required: false
 outputs:
