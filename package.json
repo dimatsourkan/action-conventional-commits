@@ -5,7 +5,7 @@
   "description": "Check if your PR commits matching with conventionalcommits",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc && node ./setup-package-json.js",
+    "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
