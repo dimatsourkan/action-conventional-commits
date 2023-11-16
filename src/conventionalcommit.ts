@@ -44,10 +44,11 @@ const regex_conventionalcommit_breaking_change = new RegExp(
 
 export function checkCommit(
   commit_msg: string,
-  types: string
+  types: string,
+  scopes: string
 ): conventionalcommit {
   const regex_conventionalcommit = new RegExp(
-    `^(?:(?<type>(${types}))(?:\\((?<scope>.*)\\))?(?<breaking>!?): (?<message>.*)?)` +
+    `^(?:(?<type>(${types}))(?:\\((?<scope>${scopes})\\))?(?<breaking>!?): (?<message>.*)?)` +
       `\\n?` +
       `(?<body>[\\S\\s]+)?$`
   )

@@ -49,12 +49,12 @@ See: https://conventionalcommits.org/
 <!-- start inputs -->
 
 | **Input**         | **Description**                                  | **Default**                    | **Required** |
-| ----------------- | ------------------------------------------------ | ------------------------------ | ------------ |
+| ----------------- | ------------------------------------------------ |--------------------------------| ------------ |
 | **`token`**       | token to access GitHub API to receive PR commits | `${{ github.token }}`          | **false**    |
 | **`skip_merge`**  | skip merge commits                               | `true`                         | **false**    |
 | **`skip_revert`** | skip revert commits                              | `true`                         | **false**    |
 | **`types`**       | allow different types in commit message          | <code>fix\|feat\|revert</code> | **false**    |
-| **`scopes`**      | allow different scopes in commit message         |                                | **false**    |
+| **`scopes`**      | allow different scopes in commit message         | <code>*</code>                 | **false**    |
 
 <!-- end inputs -->
 

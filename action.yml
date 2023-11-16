@@ -2,7 +2,7 @@ name: "verify conventional commits"
 description: |
   Check if commits of a PR match against the conventional commits specification.
   See: https://conventionalcommits.org/
-author: "taskmedia"
+author: "dimatsourkan"
 inputs:
   token:
     default: "${{ github.token }}"
@@ -21,7 +21,7 @@ inputs:
     description: "allow different types in commit message"
     required: false
   scopes:
-    default: ""
+    default: "*"
     description: "allow different scopes in commit message"
     required: false
 outputs:
