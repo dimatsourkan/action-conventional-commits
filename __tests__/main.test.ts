@@ -3,11 +3,12 @@ import {expect, test} from '@jest/globals'
 import * as cc from '../src/conventionalcommit'
 
 const types_default = 'fix|feat|revert'
+const scopes_default = '*'
 
 test('commit - single', async () => {
   let msg: string = `feat: test commit`
 
-  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default)
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
 
   expect(commit.invalid).toBe(false)
   expect(commit.full).toBe(msg)
@@ -22,7 +23,7 @@ test('commit - single', async () => {
 test('commit - scope', async () => {
   let msg: string = `feat(cicd): test commit`
 
-  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default)
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
 
   expect(commit.invalid).toBe(false)
   expect(commit.full).toBe(msg)
@@ -34,12 +35,42 @@ test('commit - scope', async () => {
   expect(commit.breaking_change).toBe('')
 })
 
+test('commit - custom scope allowed', async () => {
+  let msg: string = `feat(ui): test commit`
+
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'ui')
+
+  expect(commit.invalid).toBe(false)
+  expect(commit.full).toBe(msg)
+  expect(commit.type).toBe('feat')
+  expect(commit.breaking).toBe(false)
+  expect(commit.scope).toBe('ui')
+  expect(commit.message).toBe('test commit')
+  expect(commit.body).toBe('')
+  expect(commit.breaking_change).toBe('')
+})
+
+test('commit - custom scope invalid', async () => {
+  let msg: string = `feat(ui): test commit`
+
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'utils')
+
+  expect(commit.invalid).toBe(true)
+  expect(commit.full).toBe(msg)
+  expect(commit.type).toBe('')
+  expect(commit.breaking).toBe(false)
+  expect(commit.scope).toBe('')
+  expect(commit.message).toBe('')
+  expect(commit.body).toBe('')
+  expect(commit.breaking_change).toBe('')
+})
+
 test('commit - message', async () => {
   let msg: string = `fix(cicd): test commit
 
 some more text`
 
-  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default)
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
 
   expect(commit.invalid).toBe(false)
   expect(commit.full).toBe(msg)
@@ -58,7 +89,7 @@ some more text
 
 BREAKING CHANGE: API changed`
 
-  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default)
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
 
   expect(commit.invalid).toBe(false)
   expect(commit.full).toBe(msg)
@@ -75,7 +106,8 @@ test('commit - custom type', async () => {
 
   let commit: cc.conventionalcommit = cc.checkCommit(
     msg,
-    'fix|feat|revert|chore'
+    'fix|feat|revert|chore',
+      scopes_default
   )
 
   expect(commit.invalid).toBe(false)
