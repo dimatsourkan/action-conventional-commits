@@ -1,0 +1,42 @@
+name: Publish
+
+on:
+    workflow_run:
+        workflows: [ "release" ]
+        types:
+            - completed
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: 18
+                    registry-url: https://npm.pkg.github.com/
+            -   run: npm install
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.PAT}}
+            -   run: npm run build
+            -   uses: actions/upload-artifact@v3
+                with:
+                    name: cc-package
+                    path: dist
+                    retention-days: 1
+
+    publish:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: 18
+                    registry-url: https://npm.pkg.github.com/
+            -   uses: actions/download-artifact@v3
+                with:
+                    name: cc-package
+                    path: dist
+            -   run: npm publish ./dist
+                env:
+                    NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
