@@ -31,18 +31,6 @@ tasks:
     cmds:
       - npm run build
 
-  format:
-    cmds:
-      - npm run format
-
-  format-check:
-    cmds:
-      - npm run format-check
-
-  lint:
-    cmds:
-      - npm run lint
-
   package:
     cmds:
       - npm run package
