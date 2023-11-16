@@ -22,7 +22,7 @@ jobs:
             -   uses: actions/upload-artifact@v3
                 with:
                     name: cc-package
-                    path: dist
+                    path: lib
                     retention-days: 1
 
     publish:
@@ -36,7 +36,7 @@ jobs:
             -   uses: actions/download-artifact@v3
                 with:
                     name: cc-package
-                    path: dist
-            -   run: npm publish ./dist
+                    path: lib
+            -   run: npm publish ./lib
                 env:
                     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
