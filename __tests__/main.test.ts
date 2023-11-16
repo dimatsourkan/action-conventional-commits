@@ -3,7 +3,7 @@ import {expect, test} from '@jest/globals'
 import * as cc from '../src/conventionalcommit'
 
 const types_default = 'fix|feat|revert'
-const scopes_default = '*'
+const scopes_default = '.*'
 
 test('commit - single', async () => {
   let msg: string = `feat: test commit`
