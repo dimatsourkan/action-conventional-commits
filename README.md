@@ -38,7 +38,7 @@ See: https://conventionalcommits.org/
     types: ""
 
     # allow different scopes in commit message
-    # Default: *
+    # Default: .*
     scopes: ""
 ```
 
@@ -54,7 +54,7 @@ See: https://conventionalcommits.org/
 | **`skip_merge`**  | skip merge commits                               | `true`                         | **false**    |
 | **`skip_revert`** | skip revert commits                              | `true`                         | **false**    |
 | **`types`**       | allow different types in commit message          | <code>fix\|feat\|revert</code> | **false**    |
-| **`scopes`**      | allow different scopes in commit message         | `*`                            | **false**    |
+| **`scopes`**      | allow different scopes in commit message         | `.*`                           | **false**    |
 
 <!-- end inputs -->
 
