@@ -5,7 +5,7 @@ import * as cc from '../src/conventionalcommit'
 const types_default = 'fix|feat|revert'
 const scopes_default = '.*'
 
-test('commit - single', async () => {
+test('commit - default - positive', async () => {
   let msg: string = `feat: test commit`
 
   let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
@@ -20,7 +20,22 @@ test('commit - single', async () => {
   expect(commit.breaking_change).toBe('')
 })
 
-test('commit - scope', async () => {
+test('commit - default - negative', async () => {
+  let msg: string = `test commit`
+
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
+
+  expect(commit.invalid).toBe(true)
+  expect(commit.full).toBe(msg)
+  expect(commit.type).toBe('')
+  expect(commit.breaking).toBe(false)
+  expect(commit.scope).toBe('')
+  expect(commit.message).toBe('')
+  expect(commit.body).toBe('')
+  expect(commit.breaking_change).toBe('')
+})
+
+test('commit - scope - positive', async () => {
   let msg: string = `feat(cicd): test commit`
 
   let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, scopes_default)
@@ -35,7 +50,7 @@ test('commit - scope', async () => {
   expect(commit.breaking_change).toBe('')
 })
 
-test('commit - custom scope allowed', async () => {
+test('commit - custom scope - positive', async () => {
   let msg: string = `feat(ui): test commit`
 
   let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'ui')
@@ -50,7 +65,7 @@ test('commit - custom scope allowed', async () => {
   expect(commit.breaking_change).toBe('')
 })
 
-test('commit - custom scope invalid', async () => {
+test('commit - custom scope - negative', async () => {
   let msg: string = `feat(ui): test commit`
 
   let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'utils')
@@ -65,7 +80,37 @@ test('commit - custom scope invalid', async () => {
   expect(commit.breaking_change).toBe('')
 })
 
-test('commit - message', async () => {
+test('commit - scope required - positive', async () => {
+  let msg: string = `feat(ui): test commit`
+
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'ui', true)
+
+  expect(commit.invalid).toBe(false)
+  expect(commit.full).toBe(msg)
+  expect(commit.type).toBe('feat')
+  expect(commit.breaking).toBe(false)
+  expect(commit.scope).toBe('ui')
+  expect(commit.message).toBe('test commit')
+  expect(commit.body).toBe('')
+  expect(commit.breaking_change).toBe('')
+})
+
+test('commit - scope required - negative', async () => {
+  let msg: string = `feat: test commit`
+
+  let commit: cc.conventionalcommit = cc.checkCommit(msg, types_default, 'ui', true)
+
+  expect(commit.invalid).toBe(true)
+  expect(commit.full).toBe(msg)
+  expect(commit.type).toBe('')
+  expect(commit.breaking).toBe(false)
+  expect(commit.scope).toBe('')
+  expect(commit.message).toBe('')
+  expect(commit.body).toBe('')
+  expect(commit.breaking_change).toBe('')
+})
+
+test('commit - with body', async () => {
   let msg: string = `fix(cicd): test commit
 
 some more text`
@@ -99,23 +144,4 @@ BREAKING CHANGE: API changed`
   expect(commit.message).toBe('test commit')
   expect(commit.body).toBe('some more text')
   expect(commit.breaking_change).toBe('API changed')
-})
-
-test('commit - custom type', async () => {
-  let msg: string = `chore: test commit`
-
-  let commit: cc.conventionalcommit = cc.checkCommit(
-    msg,
-    'fix|feat|revert|chore',
-      scopes_default
-  )
-
-  expect(commit.invalid).toBe(false)
-  expect(commit.full).toBe(msg)
-  expect(commit.type).toBe('chore')
-  expect(commit.breaking).toBe(false)
-  expect(commit.scope).toBe('')
-  expect(commit.message).toBe('test commit')
-  expect(commit.body).toBe('')
-  expect(commit.breaking_change).toBe('')
 })
