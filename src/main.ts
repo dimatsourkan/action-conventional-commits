@@ -52,7 +52,10 @@ async function run(): Promise<void> {
 
             if (commit.invalid) {
                 hasInvalidCommits = true
-                core.info(`❌ ${commit.full}; \n\t ${commit.error_message}`)
+                core.info(`|-------------------------------------------------------------------------------------------`)
+                core.info(`| ❌ ${commit.full};`)
+                core.info(`| Error: ${commit.error_message};`)
+                core.info(`|-------------------------------------------------------------------------------------------`)
             } else {
                 core.info(`✅ ${commit.getShortMessage()}`)
             }

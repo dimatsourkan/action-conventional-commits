@@ -37,8 +37,6 @@ export function checkCommit(
     }
 
     if (scopeRequired && result?.groups?.scope === undefined) {
-        const type = result?.groups?.type;
-        const message = result?.groups?.message;
         c.error_message = `Scope is required. Example: '${messageExample(scopeRequired, requestedScopes)}'`;
         c.invalid = true;
         return c
