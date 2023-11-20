@@ -1,73 +1,46 @@
-export class conventionalcommit {
-    invalid: boolean
-
-    full: string
-
-    type: string
-    breaking: boolean
-    scope: string
-    message: string
-    body: string
-    breaking_change: string
-
-    constructor() {
-        this.invalid = false
-        this.full = ''
-        this.type = ''
-        this.breaking = false
-        this.scope = ''
-        this.message = ''
-        this.body = ''
-        this.breaking_change = ''
-    }
-
-    getShortMessage(): string {
-        let msg = ''
-
-        msg += this.type
-        if (this.scope !== '') {
-            msg += `(${this.scope})`
-        }
-        if (this.breaking) {
-            msg += '!'
-        }
-        msg += ': '
-        msg += this.message
-
-        return msg
-    }
-}
+import {ConventionalCommitModel} from "./conventional-commit.model";
 
 const regex_conventionalcommit_breaking_change = new RegExp(
     `(?<body>[\\s\\S]*)?BREAKING CHANGE: (?<breakingchange>[\\s\\S]*)`
 )
 
+const messageExample = (scopeRequired?: boolean, scopes = "scope") => {
+    const scopeString = `(${scopes})`;
+    return `feat${scopeRequired ? scopeString : ''}: message text`;
+}
+
 export function checkCommit(
     commit_msg: string,
     types: string,
-    scopes: string,
+    requestedScopes: string,
     scopeRequired?: boolean
-): conventionalcommit {
-    scopes = scopes === "*" ? ".*" : scopes;
+): ConventionalCommitModel {
+    const scopes = requestedScopes === "*" ? ".*" : requestedScopes;
     const regexConventionalCommit = new RegExp(
         `^(?:(?<type>(${types}))(?:\\((?<scope>${scopes})\\))?(?<breaking>!?): (?<message>.*)?)` +
         `\\n?` +
         `(?<body>[\\S\\s]+)?$`
     )
 
-    const c = new conventionalcommit()
+    const c = new ConventionalCommitModel()
 
     c.full = commit_msg
 
     const result = regexConventionalCommit.exec(commit_msg)
 
     if (result == null) {
+        c.error_message = requestedScopes === "*"
+            ? `Invalid message format. Correct Example: '${messageExample(scopeRequired)}'`
+            : `Invalid message format. Correct Example: '${messageExample(true, requestedScopes)}'`
         c.invalid = true
         return c
     }
 
     if (scopeRequired && result?.groups?.scope === undefined) {
-        c.invalid = true
+        const type = result?.groups?.type;
+        const message = result?.groups?.message;
+        c.error_message = `Scope is required. Example: '${messageExample(scopeRequired, requestedScopes)}'`;
+        c.invalid = true;
         return c
     }
 

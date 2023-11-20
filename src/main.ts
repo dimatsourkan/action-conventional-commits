@@ -1,6 +1,7 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
-import * as cc from './conventionalcommit'
+import {ConventionalCommitModel} from './conventional-commit.model'
+import {checkCommit} from './conventional-commit.checker'
 
 async function run(): Promise<void> {
     try {
@@ -18,18 +19,18 @@ async function run(): Promise<void> {
         const commit_list = await receiveCommits()
 
         let hasInvalidCommits = false
-        let versionType = 'patch'
         let hasBreakingCommit = false
-        let breaking_msg = ''
+        let versionType = 'patch'
+        let breaking_msg: string | null = ''
 
-        const commits: cc.conventionalcommit[] = []
+        const commits: ConventionalCommitModel[] = []
 
         for (const c_msg of commit_list) {
             const commit_msg = String(c_msg)
 
             // check if merge commit should be skipped
             if (commit_msg.startsWith('Merge ') && skipMerge) {
-                const commit = new cc.conventionalcommit()
+                const commit = new ConventionalCommitModel()
                 commit.full = commit_msg
                 commit.type = `merge`
                 commits.push(commit)
@@ -39,7 +40,7 @@ async function run(): Promise<void> {
 
             // check if revert commit should be skipped
             if (commit_msg.startsWith('Revert ') && skipRevert) {
-                const commit = new cc.conventionalcommit()
+                const commit = new ConventionalCommitModel()
                 commit.full = commit_msg
                 commit.type = `revert`
                 commits.push(commit)
@@ -47,11 +48,11 @@ async function run(): Promise<void> {
                 continue
             }
 
-            const commit = cc.checkCommit(commit_msg, types, scopes, scopeRequired)
+            const commit = checkCommit(commit_msg, types, scopes, scopeRequired)
 
             if (commit.invalid) {
                 hasInvalidCommits = true
-                core.info(`❌ ${commit.full}`)
+                core.info(`❌ ${commit.full}; ${commit.error_message}`)
             } else {
                 core.info(`✅ ${commit.getShortMessage()}`)
             }
@@ -77,7 +78,7 @@ async function run(): Promise<void> {
         core.setOutput('version_type', versionType)
 
         if (hasInvalidCommits) {
-            core.setFailed('at least one commit is invalid')
+            core.setFailed('At least one commit is invalid')
         }
     } catch (error) {
         if (error instanceof Error) core.setFailed(error.message)
