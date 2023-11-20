@@ -19,7 +19,7 @@ See: https://conventionalcommits.org/
 <!-- start usage -->
 
 ```yaml
-- uses: dimatsourkan/action-conventional-commits@v1.1.0
+- uses: dimatsourkan/action-conventional-commits@v1.2.0
   with:
     # token to access GitHub API to receive PR commits
     # Default: ${{ github.token }}
